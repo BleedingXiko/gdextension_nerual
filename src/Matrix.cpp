@@ -217,7 +217,6 @@ Ref<Matrix> Matrix::random(const Ref<Matrix> a, const Ref<Matrix> b) {
         }
     }
 
-    memdelete(&rng);
     return result;
     
 
