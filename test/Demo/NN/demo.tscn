@@ -24,14 +24,15 @@ shape = SubResource("RectangleShape2D_mgyl3")
 position = Vector2(43, 454)
 script = ExtResource("5_tewmy")
 AI_Scene = ExtResource("6_qs1wj")
+Batch_Size = 20
 Generation_Delay = 8
 save_best = false
 input_nodes = 9
 hidden_nodes = 4
 output_nodes = 2
-random_population = 15
+random_population = 6
 use_reproduction = true
-reproduced_population = 27
+reproduced_population = 15
 
 [node name="gen" type="RichTextLabel" parent="."]
 offset_right = 896.0

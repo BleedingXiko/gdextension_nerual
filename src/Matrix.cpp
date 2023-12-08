@@ -28,9 +28,7 @@ void Matrix::_bind_methods() {
      ClassDB::bind_static_method("Matrix" , D_METHOD("average", "matrix"), &Matrix::average);
      ClassDB::bind_static_method("Matrix" , D_METHOD("random", "a", "b"), &Matrix::random);
      ClassDB::bind_static_method("Matrix" , D_METHOD("copy", "matrix"), &Matrix::copy);
-
      ClassDB::bind_static_method("Matrix", D_METHOD("load", "arr"), &Matrix::load);
-     //ClassDB::bind_static_method("Matrix", D_METHOD("rand", "matrix"), &Matrix::rand);
 }
 
 void Matrix::init(int _rows, int _cols) {
@@ -216,10 +214,7 @@ Ref<Matrix> Matrix::random(const Ref<Matrix> a, const Ref<Matrix> b) {
                 }
         }
     }
-
-    memdelete(&rng);
     return result;
-    
 
 }
 
@@ -233,7 +228,6 @@ Ref<Matrix> Matrix::copy(const Ref<Matrix> matrix) {
             result->data(i, j) = matrix->data(i, j);
         }
     }
-
 
     return result;
     

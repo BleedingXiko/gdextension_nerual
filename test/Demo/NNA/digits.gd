@@ -93,8 +93,8 @@ var training_data = [{
 }]
 
 var network_config = {
-	"learning_rate": 0.2,
-	"l2_regularization_strength": 0.001,
+	"learning_rate": 0.000001,
+	"l2_regularization_strength": 0.01,
 	"use_l2_regularization": false,
 }
 # Called when the node enters the scene tree for the first time.
@@ -102,7 +102,7 @@ func _ready():
 	nn = NeuralNetworkAdvanced.new(network_config)
 	
 	nn.add_layer(25)
-	nn.add_layer(26, nn.ACTIVATIONS.SIGMOID)
+	nn.add_layer(26, nn.ACTIVATIONS.TANH)
 	nn.add_layer(10, nn.ACTIVATIONS.SIGMOID)
 	
 	#nn.load("./nn.data")
@@ -112,7 +112,7 @@ func _ready():
 	#print(data)
 
 func test():
-	for i in range(25000):
+	for i in range(10000):
 		var data = training_data.pick_random()
 		nn.train(data.inputs, data.target)
 	nn.save("./nn.data")

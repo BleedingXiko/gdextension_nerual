@@ -153,6 +153,7 @@ func on_ai_exit_tree(node: Node):
 	if use_reproduction: best_10_nn.append(NeuralNetwork.copy(node.nn))
 	if node.nn.fitness > best_nn.fitness:
 		best_nn = NeuralNetwork.copy(node.nn)
+		print(node.nn.get_reference_count())
 	spawn_population.erase(node)
 	if freeing: return
 	current_generation_freed += 1

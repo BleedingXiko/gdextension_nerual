@@ -34,17 +34,17 @@ var q_network_config = {
 	"memory_capacity": 800,
 	"batch_size": 256, 
 	#used by the neural network
-	"learning_rate": 0.0000001, 
-	"l2_regularization_strength": 0.001,
-	"use_l2_regularization": false,
+	"learning_rate": 0.000001, 
+	"l2_regularization_strength": 0.000000001,
+	"use_l2_regularization": true,
 }
 var q_table_config = {
 	"print_debug_info": false,
 	"exploration_decreasing_decay": 0.01,
 	"min_exploration_probability": 0.02,
 	"discounted_factor": 0.9,
-	"learning_rate": 0.1,
-	"decay_per_steps": 100,
+	"learning_rate": 0.025,
+	"decay_per_steps": 200,
 	"max_state_value": 2,
 	"random_weights": false,
 }
@@ -53,7 +53,9 @@ func _ready() -> void:
 	qt = QTable.new(36 * 3, 4, q_table_config)
 	qnet = QNetwork.new(q_network_config) #config is used by both qnet and neural network advanced
 	qnet.add_layer(2) #input nodes
-	qnet.add_layer(8, ACTIVATIONS.TANH) #hidden layer
+	qnet.add_layer(10, ACTIVATIONS.ELU) #hidden layer
+	qnet.add_layer(12, ACTIVATIONS.ELU) #hidden layer
+	qnet.add_layer(8, ACTIVATIONS.ELU) #hidden layer
 	qnet.add_layer(4, ACTIVATIONS.SIGMOID) # 4 actions
 
 func _process(_delta: float) -> void:
@@ -62,14 +64,13 @@ func _process(_delta: float) -> void:
 	elif Input.is_action_just_pressed("ui_down"):
 		$Timer.wait_time = 0.001
 	elif Input.is_action_just_pressed("ui_up"):
-		qnet.save('./qnet.data')
+		qt.load('./qnet.data')
 
 func _on_timer_timeout():
+	current_state = [row * 6 + column, target]
+	var action_to_do: int = qt.predict(current_state, previous_reward)
 	if done:
 		reset()
-		return
-	current_state = [row * 6 + column, target]
-	var action_to_do: int = qnet.predict(current_state, previous_reward)
 	
 	current_iteration_rewards += previous_reward
 	previous_reward = 0.0
@@ -87,7 +88,7 @@ func _on_timer_timeout():
 	else:
 		previous_reward -= 0.05
 	$player.position = Vector2(96 * column + 16, 512 - (96 * row + 16))
-	$lr.text = str(qnet.exploration_probability)
+	$lr.text = str(qt.exploration_probability)
 	$target.text = str(target)
 
 

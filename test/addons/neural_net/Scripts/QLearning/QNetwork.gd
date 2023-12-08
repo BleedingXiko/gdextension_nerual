@@ -91,12 +91,12 @@ func train_batch(batch):
 		target_q_values[experience["action"]] = target_q_value
 		neural_network.train(experience["state"], target_q_values)
 
-func predict(current_states: Array, reward_of_previous_state: float) -> int:
+func predict(current_states: Array, reward_of_previous_state: float, done: bool = false) -> int:
 	var current_q_values = neural_network.predict(current_states)
 	
 	if is_learning and previous_state.size() != 0:
 		if use_replay:
-			add_to_memory(previous_state, previous_action, reward_of_previous_state, current_states, false) # 'false' for 'done' flag; update as necessary
+			add_to_memory(previous_state, previous_action, reward_of_previous_state, current_states, done) # 'false' for 'done' flag; update as necessary
 			if replay_memory.size() >= batch_size:
 				var batch = sample_memory()
 				train_batch(batch)
