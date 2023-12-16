@@ -30,11 +30,11 @@ public:
     Array get_data();
     void set_at(int _row, int _col, double value);
     double get_at(int _row, int _col);
+    void rand();
 
 
     static Ref<Matrix> from_array(const Array& arr);
     static Array to_array(const Ref<Matrix> matrix);
-    static Ref<Matrix> rand(const Ref<Matrix> matrix);
     static Ref<Matrix> add(const Ref<Matrix> a, const Ref<Matrix> b);
     static Ref<Matrix> subtract(const Ref<Matrix> a, const Ref<Matrix> b);
     static Ref<Matrix> scalar(const Ref<Matrix> matrix, float value);

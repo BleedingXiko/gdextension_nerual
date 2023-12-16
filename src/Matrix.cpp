@@ -7,17 +7,17 @@ using namespace godot;
 
 void Matrix::_bind_methods() {
     ClassDB::bind_method(D_METHOD("init", "_rows", "_cols"), &Matrix::init);
-   ClassDB::bind_method(D_METHOD("get_data"), &Matrix::get_data);
-   ClassDB::bind_method(D_METHOD("set_at", "_rows", "_cols", "value"), &Matrix::set_at);
-   ClassDB::bind_method(D_METHOD("get_at", "_rows", "_cols"), &Matrix::get_at);
+    ClassDB::bind_method(D_METHOD("get_data"), &Matrix::get_data);
+    ClassDB::bind_method(D_METHOD("set_at", "_rows", "_cols", "value"), &Matrix::set_at);
+    ClassDB::bind_method(D_METHOD("get_at", "_rows", "_cols"), &Matrix::get_at);
     ClassDB::bind_method(D_METHOD("save"), &Matrix::save);
-     ClassDB::bind_method(D_METHOD("index_of_max_from_row", "_row"), &Matrix::index_of_max_from_row);
-     ClassDB::bind_method(D_METHOD("max_from_row", "_row"), &Matrix::max_from_row);
+    ClassDB::bind_method(D_METHOD("index_of_max_from_row", "_row"), &Matrix::index_of_max_from_row);
+    ClassDB::bind_method(D_METHOD("max_from_row", "_row"), &Matrix::max_from_row);
+    ClassDB::bind_method(D_METHOD("rand"), &Matrix::rand);
 
     //Static Methods
      ClassDB::bind_static_method("Matrix", D_METHOD("to_array", "matrix"), &Matrix::to_array);
      ClassDB::bind_static_method("Matrix", D_METHOD("from_array", "arr"), &Matrix::from_array);
-     ClassDB::bind_static_method("Matrix", D_METHOD("rand", "matrix"), &Matrix::rand);
      ClassDB::bind_static_method("Matrix", D_METHOD("add", "a", "b"), &Matrix::add);
      ClassDB::bind_static_method("Matrix", D_METHOD("subtract", "a", "b"), &Matrix::subtract);
      ClassDB::bind_static_method("Matrix", D_METHOD("scalar", "matrix", "value"), &Matrix::scalar);
@@ -70,11 +70,8 @@ Array Matrix::to_array(const Ref<Matrix> matrix) {
     return arr;
 }
 
-Ref<Matrix> Matrix::rand(const Ref<Matrix> matrix) {
-    Ref<Matrix> result = memnew(Matrix);
-    result->init(matrix->data.rows(), matrix->data.cols());
-    result->data.setRandom();
-    return result;
+void Matrix::rand() {
+    data.setRandom();
 }
 
 Ref<Matrix> Matrix::add(const Ref<Matrix> a, const Ref<Matrix> b) {
