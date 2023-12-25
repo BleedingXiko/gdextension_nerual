@@ -40,20 +40,17 @@ func _init(n_observations: int, n_action_spaces: int, config: Dictionary) -> voi
 	print_debug_info = config.get("print_debug_info", print_debug_info)
 	random_weights = config.get("random_weights", random_weights)
 	
+	Table = Matrix.new()
+	Table.init(observation_space, action_spaces)
 	if random_weights:
-		var t: Matrix = Matrix.new()
-		t.init(observation_space, action_spaces)
-		Table = Matrix.rand(t)
-	else:
-		Table = Matrix.new()
-		Table.init(observation_space, action_spaces)
+		Table.rand()
 	
 	#QTable = Matrix.rand(Matrix.new(observation_space, action_spaces))
 	# Optionally initialize QTable with random values
 
 func predict(current_states: Array, reward_of_previous_state: float) -> int:
 	# Create a composite state from current states
-	var chosen_state = create_composite_state(current_states)
+	var chosen_state: int = create_composite_state(current_states)
 
 	# Update Q-Table for the previous state-action pair
 	if is_learning and previous_state != -100:
@@ -85,8 +82,8 @@ func predict(current_states: Array, reward_of_previous_state: float) -> int:
 	return action_to_take
 
 func create_composite_state(current_states: Array) -> int:
-	var composite_state = 0
-	var multiplier = 1
+	var composite_state: int = 0
+	var multiplier: int = 1
 	for state in current_states:
 		composite_state += state * multiplier
 		multiplier *= max_state_value # Define max_state_value based on your state ranges

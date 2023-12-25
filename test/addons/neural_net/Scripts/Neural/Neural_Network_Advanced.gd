@@ -26,9 +26,11 @@ func add_layer(nodes: int, activation: Dictionary = ACTIVATIONS.SIGMOID):
 		var bias = Matrix.new()
 		bias.init(nodes, 1)
 		weights.init(nodes, layer_structure[-1])
+		weights.rand()
+		bias.rand()
 		var layer_data: Dictionary = {
-			"weights": Matrix.rand(weights),
-			"bias": Matrix.rand(bias),
+			"weights": weights,
+			"bias": bias,
 			"activation": activation
 		}
 		network.push_back(layer_data)
