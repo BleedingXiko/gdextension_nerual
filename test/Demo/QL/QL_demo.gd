@@ -1,7 +1,6 @@
 extends Node2D
 
 var qt: QTable
-var qnet: QNetwork
 var row: int = 0
 var column: int = 0
 
@@ -17,29 +16,8 @@ var current_iteration_rewards: float = 0.0
 var done: bool = false
 
 
-var ACTIVATIONS = Activation.new().functions
-
-
-var q_network_config = {
-	"print_debug_info": true,
-	"exploration_probability": 1.0,
-	"exploration_decreasing_decay": 0.01,
-	"min_exploration_probability": 0.05,
-	"discounted_factor": 0.95,
-	"decay_per_steps": 250,
-	"use_replay": true,
-	"is_learning": true,
-	"use_target_network": true,
-	"update_target_every_steps": 1500,
-	"memory_capacity": 800,
-	"batch_size": 256, 
-	#used by the neural network
-	"learning_rate": 0.000001, 
-	"l2_regularization_strength": 0.000000001,
-	"use_l2_regularization": true,
-}
 var q_table_config = {
-	"print_debug_info": false,
+	"print_debug_info": true,
 	"exploration_decreasing_decay": 0.01,
 	"min_exploration_probability": 0.02,
 	"discounted_factor": 0.9,
@@ -50,13 +28,8 @@ var q_table_config = {
 }
 
 func _ready() -> void:
-	qt = QTable.new(36 * 3, 4, q_table_config)
-	qnet = QNetwork.new(q_network_config) #config is used by both qnet and neural network advanced
-	qnet.add_layer(2) #input nodes
-	qnet.add_layer(10, ACTIVATIONS.ELU) #hidden layer
-	qnet.add_layer(12, ACTIVATIONS.ELU) #hidden layer
-	qnet.add_layer(8, ACTIVATIONS.ELU) #hidden layer
-	qnet.add_layer(4, ACTIVATIONS.SIGMOID) # 4 actions
+	qt = QTable.new()
+	qt.init(36 * 3, 4, q_table_config)
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("predict"):
@@ -88,7 +61,7 @@ func _on_timer_timeout():
 	else:
 		previous_reward -= 0.05
 	$player.position = Vector2(96 * column + 16, 512 - (96 * row + 16))
-	$lr.text = str(qt.exploration_probability)
+	$lr.text = str(qt.get_exploration_probability())
 	$target.text = str(target)
 
 

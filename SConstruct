@@ -18,14 +18,14 @@ sources = Glob("src/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(
-        "test/bin/matrixlib.{}.{}.framework/matrixlib.{}.{}".format(
+        "test/bin/neural.{}.{}.framework/neural.{}.{}".format(
             env["platform"], env["target"], env["platform"], env["target"]
         ),
         source=sources,
     )
 else:
     library = env.SharedLibrary(
-        "test/bin/matrixlib{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        "test/bin/neural{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
 
