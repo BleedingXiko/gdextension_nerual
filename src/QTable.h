@@ -1,6 +1,8 @@
 #ifndef QTABLE_H
 #define QTABLE_H
 
+#include "Matrix.h"
+
 #include <godot_cpp/classes/global_constants.hpp>
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/core/class_db.hpp>
@@ -19,7 +21,7 @@ class QTable : public RefCounted {
 private:
     int observation_space;
     int action_spaces;
-    Eigen::MatrixXd Table;
+    Ref<Matrix> Table;
 
 
     double exploration_probability;
@@ -37,9 +39,6 @@ private:
     int max_state_value;
     bool is_learning;
     bool print_debug_info;
-
-    void load_table(const Array& arr);
-    Array save_table();
     
 protected:
     static void _bind_methods();
@@ -55,14 +54,6 @@ public:
 
     void save(const String& path);
     void load(const String& path);
-
-
-    //Eigen Interface
-    Array get_data();
-    void set_at(int _row, int _col, double value);
-    double get_at(int _row, int _col);
-    int index_of_max_from_row(int _row);
-    double max_from_row(int _row);
 
 
     QTable();

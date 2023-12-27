@@ -85,7 +85,21 @@
         "xtr1common": "cpp",
         "*.expression": "cpp",
         "alignedvector3": "cpp",
-        "fft": "cpp"
+        "fft": "cpp",
+        "core": "cpp",
+        "superlusupport": "cpp",
+        "*.evaluator": "cpp",
+        "*.traits": "cpp",
+        "adolcforward": "cpp",
+        "autodiff": "cpp",
+        "bvh": "cpp",
+        "eulerangles": "cpp",
+        "kroneckerproduct": "cpp",
+        "mprealsupport": "cpp",
+        "numericaldiff": "cpp",
+        "openglsupport": "cpp",
+        "specialfunctions": "cpp",
+        "splines": "cpp"
     },
     "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "disabled"

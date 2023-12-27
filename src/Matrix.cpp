@@ -304,7 +304,6 @@ Ref<Matrix> Matrix::load(const Array &arr)
         for (int j = 0; j < cols; ++j)
         {
             double value = static_cast<double>(row[j]); // Cast to double
-                                                        //   UtilityFunctions::print(value);
             result->data(i, j) = value;
         }
     }
