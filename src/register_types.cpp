@@ -1,5 +1,6 @@
 #include "register_types.h"
 #include "QTable.h"
+#include "Activations.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
@@ -11,6 +12,7 @@ void initialize_neural_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 	ClassDB::register_class<QTable>();
+	ClassDB::register_class<Activation>();
 }
 
 void uninitialize_neural_module(ModuleInitializationLevel p_level) {
