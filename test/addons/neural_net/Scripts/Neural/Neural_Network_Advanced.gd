@@ -2,7 +2,9 @@ class_name NeuralNetworkAdvanced
 
 var network: Array
 
-var ACTIVATIONS = Activation.new().functions
+var af = Activation.new()
+
+var ACTIVATIONS = af.get_functions()
 
 
 var learning_rate: float = 0.1

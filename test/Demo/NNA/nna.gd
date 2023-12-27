@@ -25,7 +25,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("predict"):
-		nnas.save("./test.nn")
+		#nnas.save("./test.nn")
 		print("--------------Prediction--------------")
 		print(nnas.predict([1.0, 2.0, 3.0]))
 		print(nnas.predict([4.0, 5.0, 6.0]))
