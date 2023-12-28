@@ -19,14 +19,14 @@ var done: bool = false
 var q_table_config = {
 	"print_debug_info": true,
 	"exploration_decreasing_decay": 0.01,
-	"exploration_strategy": "ucb",
-	"exploration_parameter": 4,
+	"exploration_strategy": "ucb", #epsilon_greedy softmax thompson_sampling ucb 
+	"exploration_parameter": 2,
 	"min_exploration_probability": 0.02,
 	"discounted_factor": 0.9,
 	"learning_rate": 0.1,
 	"decay_per_steps": 100,
 	"max_state_value": 2,
-	"random_weights": true,
+	"random_weights": false,
 }
 
 func _ready() -> void:
