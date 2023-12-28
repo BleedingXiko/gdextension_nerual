@@ -16,10 +16,11 @@ var tile_size = 20
 var manhattan_distance = 0
 var done = false
 
-var ACTIVATIONS = Activation.new().functions
+var af = Activation.new()
+var ACTIVATIONS = af.get_functions()
 
 var q_network_config = {
-	"print_debug_info": true,
+	"print_debug_info": false,
 	"exploration_probability": 1.0,
 	"exploration_decreasing_decay": 0.01,
 	"min_exploration_probability": 0.05,
@@ -139,9 +140,9 @@ func spawn_food():
 
 func _on_game_timeout():
 	#print(get_reward())
-	print(done)
 	var action = qnet.predict(get_state(), previous_reward, done)
 	previous_reward = get_reward()
+	print(done)
 	move_snake(action)
 	update_labels()
 
@@ -193,9 +194,9 @@ func get_reward():
 	for body_part in snake_body:
 		if snake[0].position == body_part.position:
 			done = true
+			print(done)
 			reward -= 2  # Large penalty for self-collision
 			reset_game()
-			break
 		
 	manhattan_distance = new_manhattan_distance
 	return reward

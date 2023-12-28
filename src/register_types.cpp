@@ -1,6 +1,7 @@
 #include "register_types.h"
 #include "Matrix.h"
 #include "QTable.h"
+//#include "Neural_Network.h"
 #include "Activations.h"
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -14,6 +15,7 @@ void initialize_neural_module(ModuleInitializationLevel p_level) {
 	}
 	ClassDB::register_class<Matrix>();
 	ClassDB::register_class<QTable>();
+	//ClassDB::register_class<NeuralNetwork>();
 	ClassDB::register_class<Activation>();
 }
 

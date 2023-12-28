@@ -32,6 +32,8 @@ public:
     void init(int _rows, int _cols);
 
     Array get_data();
+    int get_rows();
+    int get_cols();
     void set_at(int _row, int _col, double _value);
     double get_at(int _row, int _col);
     void rand();

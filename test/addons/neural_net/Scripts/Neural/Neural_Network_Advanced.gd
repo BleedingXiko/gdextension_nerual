@@ -2,26 +2,25 @@ class_name NeuralNetworkAdvanced
 
 var network: Array
 
-var af = Activation.new()
-
-var ACTIVATIONS = af.get_functions()
+var af: Activation = Activation.new()
+var ACTIVATIONS: Dictionary = af.get_functions()
 
 
 var learning_rate: float = 0.1
 var use_l2_regularization: bool = false
 var l2_regularization_strength: float = 0.001
 
-var layer_structure = []
+var layer_structure: Array[int] = []
 
 var raycasts: Array[RayCast2D]
 
-func _init(config: Dictionary):
+func _init(config: Dictionary) -> void:
 	learning_rate = config.get("learning_rate", learning_rate)
 	use_l2_regularization = config.get("use_l2_regularization", use_l2_regularization)
 	l2_regularization_strength = config.get("l2_regularization_strength", l2_regularization_strength)
 	
 
-func add_layer(nodes: int, activation: Dictionary = ACTIVATIONS.SIGMOID):
+func add_layer(nodes: int, activation: Dictionary = ACTIVATIONS.SIGMOID) -> void:
 	
 	if layer_structure.size() != 0:
 		var weights = Matrix.new()
@@ -48,7 +47,7 @@ func predict(input_array: Array) -> Array:
 		inputs = map
 	return Matrix.to_array(inputs)
 
-func train(input_array: Array, target_array: Array):
+func train(input_array: Array, target_array: Array) -> void:
 	var inputs: Matrix = Matrix.from_array(input_array)
 	var targets: Matrix = Matrix.from_array(target_array)
 
@@ -156,7 +155,7 @@ func get_prediction_from_raycasts(optional_val: Array = []) -> Array:
 	_array_.append_array(optional_val)
 	return predict(_array_)
 
-func get_distance(_raycast: RayCast2D):
+func get_distance(_raycast: RayCast2D) -> float:
 	var distance: float = 0.0
 	if _raycast.is_colliding():
 		var origin: Vector2 = _raycast.global_transform.get_origin()
@@ -167,7 +166,7 @@ func get_distance(_raycast: RayCast2D):
 		distance = sqrt((pow(_raycast.target_position.x, 2) + pow(_raycast.target_position.y, 2)))
 	return distance
 
-func save(path: String):
+func save(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	var data_to_save = []
 	for layer in network:
@@ -182,10 +181,10 @@ func save(path: String):
 	file.close()
 	print(data_to_save)
 
-func debug():
-	var data = []
+func debug() -> Array[Dictionary]:
+	var data: Array[Dictionary] = []
 	for layer in network:
-		var layer_data = {
+		var layer_data: Dictionary = {
 			"weights": layer.weights.save(),
 			"bias": layer.bias.save(),
 			"activation": layer.activation.name
@@ -193,7 +192,7 @@ func debug():
 		data.append(layer_data)
 	return data
 
-func load(path: String):
+func load(path: String) -> void:
 	var file = FileAccess.open(path, FileAccess.READ)
 	var data = file.get_var()
 	

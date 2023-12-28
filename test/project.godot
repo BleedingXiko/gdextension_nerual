@@ -11,12 +11,13 @@ config_version=5
 [application]
 
 config/name="Test"
+run/main_scene="res://Demo/NNA/nna.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_state_charts/plugin.cfg", "res://addons/neural_net/plugin.cfg")
 
 [input]
 

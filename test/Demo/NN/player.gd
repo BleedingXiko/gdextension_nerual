@@ -13,8 +13,8 @@ var nn: NeuralNetwork
 
 
 func _ready():
-	for child in $rays.get_children():
-		nn.raycasts.append(child)
+	for ray in $rays.get_children():
+		nn.raycasts.append(ray)
 	$Sprite2d.modulate = nn.color
 
 func _physics_process(delta):
@@ -36,7 +36,7 @@ func _physics_process(delta):
 	
 	move_and_slide()
 	
-	nn.fitness = pow(position.x, 3) / time_alive
+	nn.fitness = (pow(position.x, 3) / time_alive)
 
 
 func _on_enemy_detector_area_entered(area: Node):

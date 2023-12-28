@@ -5,6 +5,8 @@ using namespace godot;
 void Matrix::_bind_methods()
 {
     ClassDB::bind_method(D_METHOD("init", "_rows", "_cols"), &Matrix::init);
+    ClassDB::bind_method(D_METHOD("get_rows"), &Matrix::get_rows);
+    ClassDB::bind_method(D_METHOD("get_cols"), &Matrix::get_cols);
     ClassDB::bind_method(D_METHOD("get_data"), &Matrix::get_data);
     ClassDB::bind_method(D_METHOD("set_at", "_rows", "_cols", "_value"), &Matrix::set_at);
     ClassDB::bind_method(D_METHOD("get_at", "_rows", "_cols"), &Matrix::get_at);
@@ -34,6 +36,16 @@ void Matrix::init(int _rows, int _cols)
     data = Eigen::MatrixXd::Constant(_rows, _cols, 0.0);
 }
 
+int Matrix::get_rows()
+{
+    return data.rows();
+}
+
+int Matrix::get_cols()
+{
+    return data.cols();
+}
+
 void Matrix::set_at(int _row, int _col, double _value)
 {
     data(_row, _col) = _value;
@@ -50,7 +62,6 @@ Ref<Matrix> Matrix::from_array(const Array &arr)
     for (int i = 0; i < result->data.rows(); ++i)
     {
         double value = static_cast<double>(arr[i]); // Cast to double
-                                                    // UtilityFunctions::print(arr[i]);
         result->data(i, 0) = value;
     }
 

@@ -1,36 +1,32 @@
 extends Node2D
 
-var nnas: NeuralNetworkAdvanced
+var nn: NeuralNetwork
 
-var network_config = {
-	"learning_rate": 0.0001,
-	"l2_regularization_strength": 0.001,
-	"use_l2_regularization": false,
-}
+var af = Activation.new()
+
+var activations = af.get_functions()
+
 
 func _ready() -> void:
-	nnas = NeuralNetworkAdvanced.new(network_config)
-	nnas.add_layer(3)
-	nnas.add_layer(12, nnas.ACTIVATIONS.RELU)
-	nnas.add_layer(1, nnas.ACTIVATIONS.LINEAR)
+	nn = NeuralNetwork.new(3, 4, 1)
+	nn.set_activation_function(activations.TANH, activations.SIGMOID)
 	
 	
-	for i in range(6000):
-		nnas.train([1.0, 2.0, 3.0], [6.0])
-		nnas.train([4.0, 5.0, 6.0], [15.0])
-		nnas.train([7.0, 8.0, 9.0], [24.0])
-		nnas.train([10.0, 11.0, 12.0], [33.0])
-		nnas.train([13.0, 14.0, 15.0], [42.0])
+	nn.train([1.0, 2.0, 3.0], [6.0])
+		#nn.train([4.0, 5.0, 6.0], [15.0])
+		#nn.train([7.0, 8.0, 9.0], [24.0])
+		#nn.train([10.0, 11.0, 12.0], [33.0])
+		#nn.train([13.0, 14.0, 15.0], [42.0])
 
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("predict"):
 		#nnas.save("./test.nn")
 		print("--------------Prediction--------------")
-		print(nnas.predict([1.0, 2.0, 3.0]))
-		print(nnas.predict([4.0, 5.0, 6.0]))
-		print(nnas.predict([7.0, 8.0, 9.0]))
-		print(nnas.predict([10.0, 11.0, 12.0]))
-		print(nnas.predict([13.0, 14.0, 15.0]))
-		print(nnas.predict([15.0, 15.0, 15.0]))
+		print(nn.predict([1.0, 2.0, 3.0]))
+		#print(nn.predict([4.0, 5.0, 6.0]))
+		#print(nn.predict([7.0, 8.0, 9.0]))
+		#print(nn.predict([10.0, 11.0, 12.0]))
+		#print(nn.predict([13.0, 14.0, 15.0]))
+		#print(nn.predict([15.0, 15.0, 15.0]))
 
