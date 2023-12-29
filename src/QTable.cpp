@@ -54,34 +54,31 @@ int QTable::predict(const Array &current_states, double reward_of_previous_state
         increment_total_visits(previous_state);
     }
 
-    int action_to_take = selectStrategy(exploration_strategy, action_spaces, chosen_state, exploration_probability, steps_completed);
+    int action_to_take = selectStrategy(exploration_strategy, action_spaces, chosen_state);
 
     if (is_learning)
     {
         previous_state = chosen_state;
         previous_action = action_to_take;
-        if (steps_completed % decay_per_steps == 0)
-        {
-            exploration_probability = UtilityFunctions::max(min_exploration_probability, exploration_probability - exploration_decreasing_decay);
-            if (print_debug_info)
-            {
-                UtilityFunctions::print("Total steps completed:", steps_completed);
-                UtilityFunctions::print("Current exploration probability:", exploration_probability);
-                UtilityFunctions::print("Q-Table data:", Table->get_data());
-                UtilityFunctions::print("-----------------------------------------------------------------------------------------");
-            }
-        }
+    }
+
+    if (print_debug_info && steps_completed % decay_per_steps == 0)
+    {
+        UtilityFunctions::print("Total steps completed:", steps_completed);
+        UtilityFunctions::print("Current exploration probability:", exploration_probability);
+        UtilityFunctions::print("Q-Table data:", Table->get_data());
+        UtilityFunctions::print("-----------------------------------------------------------------------------------------");
     }
 
     steps_completed += 1;
     return action_to_take;
 }
 
-int QTable::selectStrategy(const String &exploration_strategy, int action_spaces, int chosen_state, double exploration_probability, int steps_completed)
+int QTable::selectStrategy(const String &exploration_strategy, int action_spaces, int chosen_state)
 {
     if (exploration_strategy == "epsilon_greedy")
     {
-        return epsilonGreedyStrategy(action_spaces, chosen_state, exploration_probability);
+        return epsilonGreedyStrategy(action_spaces, chosen_state);
     }
     else if (exploration_strategy == "softmax")
     {
@@ -98,13 +95,18 @@ int QTable::selectStrategy(const String &exploration_strategy, int action_spaces
     else
     {
         ERR_PRINT("Unknown exploration strategy: ");
-        return epsilonGreedyStrategy(action_spaces, chosen_state, exploration_probability);
+        return epsilonGreedyStrategy(action_spaces, chosen_state);
     }
 }
 
 // Define different exploration strategies as functions
-int QTable::epsilonGreedyStrategy(int action_spaces, int chosen_state, double exploration_probability)
+int QTable::epsilonGreedyStrategy(int action_spaces, int chosen_state)
 {
+    if (steps_completed % decay_per_steps == 0)
+    {
+        exploration_probability = UtilityFunctions::max(min_exploration_probability, exploration_probability - exploration_decreasing_decay);
+    }
+
     if (rng->randf() < exploration_probability)
     {
         return rng->randi() % action_spaces;
@@ -149,12 +151,11 @@ int QTable::softmaxExploration(int action_spaces, int chosen_state, double tempe
     action_probabilities = normalizeArray(action_probabilities);
 
     // Choose an action based on the probabilities
-    double random_value = rng->randf();
     double cumulative_probability = 0.0;
     for (int action = 0; action < action_spaces; ++action)
     {
         cumulative_probability += static_cast<double>(action_probabilities[action]);
-        if (random_value < cumulative_probability)
+        if (rng->randf() < cumulative_probability)
         {
             return action;
         }
@@ -175,16 +176,15 @@ int QTable::thompsonSampling(int action_spaces, int chosen_state)
         double beta = get_total_visits(chosen_state) - alpha + 1;
 
         // Sample from Beta distribution
-        double gamma1 = rng->randf(); // Uniform random variable [0, 1)
-        double gamma2 = rng->randf(); // Uniform random variable [0, 1)
-
-        double sampled_value = pow(gamma1, 1.0 / alpha) / (pow(gamma1, 1.0 / alpha) + pow(gamma2, 1.0 / beta));
+        double sampled_value = pow(rng->randf(), 1.0 / alpha) / (pow(rng->randf(), 1.0 / alpha) + pow(rng->randf(), 1.0 / beta));
 
         sampled_values.append(sampled_value);
     }
 
     // Choose the action with the highest sampled value
-    return sampled_values.find(sampled_values.max());
+    int action_to_take = sampled_values.find(sampled_values.max());
+    
+    return action_to_take;
 }
 
 int QTable::ucbExploration(int action_spaces, int chosen_state, int total_steps, double exploration_parameter)
@@ -220,6 +220,10 @@ int QTable::sum(const Array &array)
         {
             result += element.operator int();
         }
+        if (element.get_type() == Variant::FLOAT)
+        {
+            result += element.operator float();
+        }
         // You might need additional checks for other types like Variant::REAL
     }
     return result;
@@ -244,7 +248,8 @@ void QTable::increment_visits(int state, int action)
 void QTable::increment_total_visits(int state)
 {
     // Increment the total number of visits to a state
-    TotalVisitCounts->set_at(state, 0, TotalVisitCounts->get_at(state, 0) + 1);
+    double value = TotalVisitCounts->get_at(state, 0) + 1;
+    TotalVisitCounts->set_at(state, 0, value);
 }
 
 int QTable::create_composite_state(const Array &current_states)

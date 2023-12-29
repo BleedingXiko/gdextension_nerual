@@ -63,8 +63,8 @@ public:
     void save(const String &path);
     void load(const String &path);
 
-    int selectStrategy(const String &exploration_strategy, int action_spaces, int chosen_state, double exploration_probability, int steps_completed);
-    int epsilonGreedyStrategy(int action_spaces, int chosen_state, double exploration_probability);
+    int selectStrategy(const String &exploration_strategy, int action_spaces, int chosen_state);
+    int epsilonGreedyStrategy(int action_spaces, int chosen_state);
     Array normalizeArray(const Array &input);
     int softmaxExploration(int action_spaces, int chosen_state, double temperature);
     int thompsonSampling(int action_spaces, int chosen_state);
