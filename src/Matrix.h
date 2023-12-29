@@ -54,6 +54,7 @@ public:
     static float average(const Ref<Matrix> matrix);
 
     int index_of_max_from_row(int _row);
+    Array indices_of_max_from_row(int _row);
     double max_from_row(int _row);
     static Ref<Matrix> load(const Array &arr);
     Array save();

@@ -17,23 +17,23 @@ var done: bool = false
 
 
 var q_table_config = {
-	"print_debug_info": true,
-	"is_learning": true,
+	"print_debug_info": false,
+	"is_learning": false,
 	"exploration_decreasing_decay": 0.01,
 	"exploration_strategy": "softmax", #epsilon_greedy softmax thompson_sampling ucb 
-	"exploration_parameter": 0.5,
+	"exploration_parameter": 0.3,
 	"min_exploration_probability": 0.02,
 	"discounted_factor": 0.9,
-	"learning_rate": 0.1,
+	"learning_rate": 0.05,
 	"decay_per_steps": 100,
 	"max_state_value": 2,
-	"random_weights": true,
+	"random_weights": false,
 }
 
 func _ready() -> void:
 	qt = QTable.new()
-	qt.init(36 * 3, 4, q_table_config)
-	#qt.load('./qnet.data', q_table_config)
+	#qt.init(36 * 3, 4, q_table_config)
+	qt.load('./qnet.data', q_table_config)
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("predict"):

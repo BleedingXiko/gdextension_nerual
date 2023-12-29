@@ -67,7 +67,10 @@ int QTable::predict(const Array &current_states, double reward_of_previous_state
     }
     else
     {
-        action_to_take = Table->index_of_max_from_row(chosen_state);
+        // This helps to avoid getting stuck in a loop
+       Array actions = Table->indices_of_max_from_row(chosen_state);
+        action_to_take = actions.pick_random();
+       //action_to_take = Table->index_of_max_from_row(chosen_state);
     }
 
 
