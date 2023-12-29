@@ -89,8 +89,7 @@ func train_batch(batch):
 		var target_q_value = experience["reward"] + discounted_factor * max_future_q if not experience["done"] else experience["reward"]
 		var target_q_values = neural_network.predict(experience["state"])
 		target_q_values[experience["action"]] = target_q_value
-		for i in range(10):
-			neural_network.train(experience["state"], target_q_values)
+		neural_network.train(experience["state"], target_q_values)
 
 func predict(current_states: Array, reward_of_previous_state: float, done: bool = false) -> int:
 	var current_q_values = neural_network.predict(current_states)
@@ -105,16 +104,12 @@ func predict(current_states: Array, reward_of_previous_state: float, done: bool 
 			var max_future_q: int
 			if use_target_network:
 				max_future_q = target_neural_network.predict(current_states).max()
-				var target_q_value = reward_of_previous_state + discounted_factor * max_future_q
-				var target_q_values = neural_network.predict(previous_state)
-				target_q_values[previous_action] = target_q_value
-				neural_network.train(previous_state, target_q_values)
 			else:
 				max_future_q = current_q_values.max()
-				var target_q_value = reward_of_previous_state + discounted_factor * max_future_q
-				var target_q_values = neural_network.predict(previous_state)
-				target_q_values[previous_action] = target_q_value
-				neural_network.train(previous_state, target_q_values)
+			var target_q_value = reward_of_previous_state + discounted_factor * max_future_q
+			var target_q_values = neural_network.predict(previous_state)
+			target_q_values[previous_action] = target_q_value
+			neural_network.train(previous_state, target_q_values)
 
 	var action_to_take: int
 	if randf() < exploration_probability:
@@ -126,7 +121,7 @@ func predict(current_states: Array, reward_of_previous_state: float, done: bool 
 		previous_state = current_states
 		previous_action = action_to_take
 	
-	if use_target_network and steps_completed % update_target_every_steps == 0:
+	if steps_completed % update_target_every_steps == 0:
 		update_target_network()
 
 	if steps_completed % decay_per_steps == 0:

@@ -90,7 +90,7 @@ func reset_game():
 	spawn_snake()
 	spawn_food()
 	score = 0
-	done = false
+	done = true
 	update_labels()
 
 func spawn_snake():
@@ -143,6 +143,7 @@ func _on_game_timeout():
 	var action = qnet.predict(get_state(), previous_reward, done)
 	previous_reward = get_reward()
 	print(done)
+	done = false
 	move_snake(action)
 	update_labels()
 
@@ -182,7 +183,6 @@ func get_reward():
 	
 	# Penalty for hitting the wall
 	if snake[0].position.x < 0 or snake[0].position.x >= grid_size.x * tile_size or snake[0].position.y < 0 or snake[0].position.y >= grid_size.y * tile_size:
-		done = true
 		reward -= 2  # Increase penalty for hitting the wall
 	
 	# Reward/Penalty for moving towards/away from food
@@ -193,8 +193,6 @@ func get_reward():
 	# Check for self-collision
 	for body_part in snake_body:
 		if snake[0].position == body_part.position:
-			done = true
-			print(done)
 			reward -= 2  # Large penalty for self-collision
 			reset_game()
 		
@@ -241,7 +239,6 @@ func move_snake(direction):
 		# Move head
 		snake[0].position = new_head_position
 	else:
-		done = true
 		reset_game()
 
 

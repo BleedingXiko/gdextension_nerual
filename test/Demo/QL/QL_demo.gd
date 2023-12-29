@@ -33,6 +33,7 @@ var q_table_config = {
 func _ready() -> void:
 	qt = QTable.new()
 	qt.init(36 * 3, 4, q_table_config)
+	#qt.load('./qnet.data', q_table_config)
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("predict"):
@@ -40,7 +41,7 @@ func _process(_delta: float) -> void:
 	elif Input.is_action_just_pressed("ui_down"):
 		$Timer.wait_time = 0.001
 	elif Input.is_action_just_pressed("ui_up"):
-		qt.load('./qnet.data')
+		qt.save('./qnet.data')
 
 func _on_timer_timeout():
 	current_state = [row * 6 + column, target]

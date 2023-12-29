@@ -53,6 +53,7 @@ protected:
 
 public:
     void init(int n_observations, int n_action_spaces, const Dictionary &config);
+    void set_variables(const Dictionary &config);
 
     double get_exploration_probability();
 
@@ -61,7 +62,7 @@ public:
     int create_composite_state(const Array &current_state);
 
     void save(const String &path);
-    void load(const String &path);
+    void load(const String &path, const Dictionary &config);
 
     int selectStrategy(const String &exploration_strategy, int action_spaces, int chosen_state);
     int epsilonGreedyStrategy(int action_spaces, int chosen_state);

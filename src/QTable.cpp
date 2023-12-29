@@ -18,6 +18,19 @@ void QTable::init(int n_observations, int n_action_spaces, const Dictionary &con
     observation_space = n_observations;
     action_spaces = n_action_spaces;
 
+    set_variables(config);
+
+    Table->init(observation_space, action_spaces);
+    VisitCounts->init(observation_space, action_spaces);
+    TotalVisitCounts->init(observation_space, action_spaces);
+    if (random_weights)
+    {
+        Table->rand();
+    };
+}
+
+void QTable::set_variables(const Dictionary &config)
+{
     is_learning = config.get("is_learning", is_learning);
     max_state_value = config.get("max_state_value", max_state_value);
     exploration_decreasing_decay = config.get("exploration_decreasing_decay", exploration_decreasing_decay);
@@ -30,14 +43,6 @@ void QTable::init(int n_observations, int n_action_spaces, const Dictionary &con
 
     exploration_strategy = config.get("exploration_strategy", exploration_strategy);
     exploration_parameter = config.get("exploration_parameter", exploration_parameter);
-
-    Table->init(observation_space, action_spaces);
-    VisitCounts->init(observation_space, action_spaces);
-    TotalVisitCounts->init(observation_space, action_spaces);
-    if (random_weights)
-    {
-        Table->rand();
-    };
 }
 
 int QTable::predict(const Array &current_states, double reward_of_previous_state)
@@ -290,7 +295,7 @@ void QTable::save(const String &path)
     file->close();
 }
 
-void QTable::load(const String &path)
+void QTable::load(const String &path, const Dictionary &config)
 {
     Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
     // Load Q-table data
@@ -302,7 +307,15 @@ void QTable::load(const String &path)
     Table = Table->load(qTableData);
 
     // Additional initialization
-    is_learning = false;
+    observation_space = Table->get_rows();
+    action_spaces = Table->get_cols();
+    set_variables(config);
+
+    if(is_learning)
+    {
+        VisitCounts->init(observation_space, action_spaces);
+        TotalVisitCounts->init(observation_space, action_spaces);
+    }
 }
 
 QTable::QTable()
