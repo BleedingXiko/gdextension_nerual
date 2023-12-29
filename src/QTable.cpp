@@ -54,7 +54,17 @@ int QTable::predict(const Array &current_states, double reward_of_previous_state
         increment_total_visits(previous_state);
     }
 
-    int action_to_take = selectStrategy(exploration_strategy, action_spaces, chosen_state);
+    int action_to_take;
+
+    if(is_learning)
+    {
+        action_to_take = selectStrategy(exploration_strategy, action_spaces, chosen_state);
+    }
+    else
+    {
+        action_to_take = Table->index_of_max_from_row(chosen_state);
+    }
+
 
     if (is_learning)
     {
@@ -293,7 +303,6 @@ void QTable::load(const String &path)
 
     // Additional initialization
     is_learning = false;
-    exploration_probability = min_exploration_probability;
 }
 
 QTable::QTable()
