@@ -19,8 +19,9 @@ var done: bool = false
 var q_table_config = {
 	"print_debug_info": false,
 	"is_learning": false,
+	"action_threshold": 0.07,
 	"exploration_decreasing_decay": 0.01,
-	"exploration_strategy": "softmax", #epsilon_greedy softmax thompson_sampling ucb 
+	"exploration_strategy": "epsilon_greedy", #epsilon_greedy softmax thompson_sampling ucb 
 	"exploration_parameter": 0.3,
 	"min_exploration_probability": 0.02,
 	"discounted_factor": 0.9,

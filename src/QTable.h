@@ -40,6 +40,7 @@ private:
     int decay_per_steps;
     int steps_completed;
     bool random_weights;
+    double action_threshold;
 
     int previous_state;
     int previous_action;

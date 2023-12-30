@@ -12,7 +12,7 @@ void Matrix::_bind_methods()
     ClassDB::bind_method(D_METHOD("get_at", "_rows", "_cols"), &Matrix::get_at);
     ClassDB::bind_method(D_METHOD("save"), &Matrix::save);
     ClassDB::bind_method(D_METHOD("index_of_max_from_row", "_row"), &Matrix::index_of_max_from_row);
-    ClassDB::bind_method(D_METHOD("indices_of_max_from_row", "_row"), &Matrix::indices_of_max_from_row);
+    ClassDB::bind_method(D_METHOD("indices_of_max_from_row", "_row", "threshold"), &Matrix::indices_of_max_from_row);
     ClassDB::bind_method(D_METHOD("max_from_row", "_row"), &Matrix::max_from_row);
     ClassDB::bind_method(D_METHOD("rand"), &Matrix::rand);
 
@@ -267,7 +267,7 @@ int Matrix::index_of_max_from_row(int _row)
     return col_index;
 }
 
-Array Matrix::indices_of_max_from_row(int _row)
+Array Matrix::indices_of_max_from_row(int _row, double threshold)
 {
     if (_row < 0 || _row >= data.rows())
     {
@@ -279,12 +279,11 @@ Array Matrix::indices_of_max_from_row(int _row)
 
     Array arr;
     double max_value = max_from_row(_row);
-    double margin = 0.07;
     for (int i = 0; i < data.cols(); ++i)
     {
         double value = data(_row, i);
         double diff = UtilityFunctions::abs(value - max_value);
-        if (diff < margin)
+        if (diff < threshold)
         {
             arr.append(i);
         }

@@ -40,6 +40,7 @@ void QTable::set_variables(const Dictionary &config)
     decay_per_steps = config.get("decay_per_steps", decay_per_steps);
     print_debug_info = config.get("print_debug_info", print_debug_info);
     random_weights = config.get("random_weights", random_weights);
+    action_threshold = config.get("action_threshold", action_threshold);
 
     exploration_strategy = config.get("exploration_strategy", exploration_strategy);
     exploration_parameter = config.get("exploration_parameter", exploration_parameter);
@@ -61,23 +62,19 @@ int QTable::predict(const Array &current_states, double reward_of_previous_state
 
     int action_to_take;
 
-    if(is_learning)
+    if (is_learning)
     {
         action_to_take = selectStrategy(exploration_strategy, action_spaces, chosen_state);
+        
+        previous_state = chosen_state;
+        previous_action = action_to_take;
     }
     else
     {
         // This helps to avoid getting stuck in a loop
-       Array actions = Table->indices_of_max_from_row(chosen_state);
+        Array actions = Table->indices_of_max_from_row(chosen_state, action_threshold);
         action_to_take = actions.pick_random();
-       //action_to_take = Table->index_of_max_from_row(chosen_state);
-    }
-
-
-    if (is_learning)
-    {
-        previous_state = chosen_state;
-        previous_action = action_to_take;
+        // action_to_take = Table->index_of_max_from_row(chosen_state);
     }
 
     if (print_debug_info && steps_completed % decay_per_steps == 0)
@@ -201,7 +198,7 @@ int QTable::thompsonSampling(int action_spaces, int chosen_state)
 
     // Choose the action with the highest sampled value
     int action_to_take = sampled_values.find(sampled_values.max());
-    
+
     return action_to_take;
 }
 
@@ -314,7 +311,7 @@ void QTable::load(const String &path, const Dictionary &config)
     action_spaces = Table->get_cols();
     set_variables(config);
 
-    if(is_learning)
+    if (is_learning)
     {
         VisitCounts->init(observation_space, action_spaces);
         TotalVisitCounts->init(observation_space, action_spaces);
@@ -339,6 +336,7 @@ QTable::QTable()
     decay_per_steps = 100;
     steps_completed = 0;
     random_weights = false;
+    action_threshold = 0.07;
 
     previous_state = -100;
     previous_action = 0;
